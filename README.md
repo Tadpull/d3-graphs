@@ -3,9 +3,9 @@
 
 ## Installation 
 ```sh
-npm install d3-graphs --save
-yarn add d3-graphs
-bower install d3-graphs --save
+npm install tadpull-d3-graphs --save
+yarn add tadpull-d3-graphs
+bower install tadpull-d3-graphs --save
 
 
 ## Build

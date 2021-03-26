@@ -1,5 +1,5 @@
 {
-  "name": "d3-graphs",
+  "name": "tadpull-d3-graphs",
   "version": "1.0.0",
   "description": "Tadpull standard D3 graphs",
   "main": "dist/index.js",
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/Tadpull/d3-graphs.git"
   },
   "author": "Tadpull",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Tadpull/d3-graphs/issues"
   },
