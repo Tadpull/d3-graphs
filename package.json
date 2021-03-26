@@ -1,0 +1,31 @@
+{
+  "name": "d3-graphs",
+  "version": "1.0.0",
+  "description": "Tadpull standard D3 graphs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tadpull/d3-graphs.git"
+  },
+  "author": "Tadpull",
+  "license": "N/A",
+  "bugs": {
+    "url": "https://github.com/Tadpull/d3-graphs/issues"
+  },
+  "homepage": "https://github.com/Tadpull/d3-graphs#readme",
+  "devDependencies": {
+    "@types/d3": "^6.3.0",
+    "@types/jsdom": "^16.2.7",
+    "@types/svg2png": "^4.1.0",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "d3": "^6.6.1",
+    "jsdom": "^16.5.1",
+    "svg2png": "^4.1.1"
+  }
+}
