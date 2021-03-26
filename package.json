@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --reporter spec",
-    "build": "tsc"
+    "build": "tsc",
+    "output": "tsc && mocha --reporter spec"
   },
   "repository": {
     "type": "git",

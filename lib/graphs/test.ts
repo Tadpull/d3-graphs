@@ -1,12 +1,31 @@
 ﻿import * as svg2png from "svg2png";
 import * as d3 from "d3";
 import * as JSDOM from "jsdom";
+import { tpDefaultScheme } from "../global/tp-color-schemes";
 
 
+export function renderTestGraphToString(width: number, height: number): string {
+    var svg = getChartJSDOM();
+    return String(drawTestGraph(svg, () => { }, width, height, true, false));
+}
 
-export function drawTestGraph(callback: Function, width: number, height: number, convertToImage: boolean = false): (void | string) {
+export function renderTestGraphInline(elementId: string, width: number, height: number): void {
+    var svg = d3.select(`#${elementId}`);
+    drawTestGraph(svg, () => { }, width, height, false, false, elementId);
+}
+
+export function renderTestGraphToImageURI(callback: Function, width: number, height: number): void {
+    var svg = getChartJSDOM();
+    drawTestGraph(svg, callback, width, height, false, true);
+}
+
+function getChartJSDOM() {
     let dom = new JSDOM.JSDOM('<html><body><div id="chart"></div></html>');
     dom.window.d3 = d3.select(dom.window.document);
+    return dom.window.d3.select('#chart')
+}
+
+function drawTestGraph(chart: any, callback: Function, width: number, height: number, convertToString: boolean = false, convertToImage: boolean = false, elementId: string |null = null): (void | string) {
 
     const radius = Math.min(width, height) / 2;
 
@@ -19,13 +38,13 @@ export function drawTestGraph(callback: Function, width: number, height: number,
         { label: "Dijkstra", count: 30 },
     ];
 
-    let color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    let svg = dom.window.d3.select('#chart')
+    let svg = chart
         .append('svg')
         .data([data])
         .attr('width', width)
         .attr('height', height);
+
+    let color = d3.scaleOrdinal(tpDefaultScheme);
 
     let g = svg
         .append('g')
@@ -46,23 +65,62 @@ export function drawTestGraph(callback: Function, width: number, height: number,
         .append("g")
         .attr("class", "arc");
 
-    arcs.append("path")
-        .attr("fill", function (d: any) {
-            return color(d.data.label);
-        })
-        .attr("d", arc);
-
-    let svgText: string = dom.window.d3.select('#chart').html();
-
-
-    // Optionally convert SVG to PNG and return it to callback as data URI
-    if (convertToImage) {
-        svg2png(Buffer.from(svgText), { width: width, height: height })
-            .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
-            .then(buffer => callback(null, buffer));
+    if (convertToString || convertToImage) {
+        arcs.append("path")
+            .attr("fill", function (d: any) {
+                return color(d.data.label);
+            })
+            .attr("d", arc);
     }
-    // Otherwise return the HTML string
     else {
-        return svgText;
+        let div = d3.select(`div#tooltip-${elementId}`);
+        if (div.empty()) {
+            d3.select("body").append("div")
+                .attr("class", "d3-tooltip")
+                .attr("id", `tooltip-${elementId}`)
+                .style("opacity", 0);
+        }
+
+        arcs.append("path")
+            .attr("fill", function (d: any) {
+                return color(d.data.label);
+            })
+            .attr("d", arc)
+            .on('mouseover', function (event:any, d:any) {
+                div.transition()
+                    .duration(50)
+                    .attr('opacity', '.85');
+                let num = d.data.count;
+                div.html(num.toString())
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 15) + "px");
+                div.transition()
+                    .duration(50)
+                    .style("opacity", 1);
+            })
+            .on('mouseout', function (event:any, d:any) {
+                div.transition()
+                    .duration(50)
+                    .attr('opacity', '1');
+                div.transition()
+                    .duration(50)
+                    .style("opacity", 0);
+            });;
+    }
+
+    if (convertToImage || convertToString) {
+        let svgText: string = chart.html();
+
+
+        // Optionally convert SVG to PNG and return it to callback as data URI
+        if (convertToImage) {
+            svg2png(Buffer.from(svgText), { width: width, height: height })
+                    .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
+                    .then(buffer => callback(null, buffer))
+        }
+        // Otherwise return the HTML string
+        else if (convertToString) {
+            return svgText;
+        }
     }
 }
