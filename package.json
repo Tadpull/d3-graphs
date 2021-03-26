@@ -2,9 +2,10 @@
   "name": "d3-graphs",
   "version": "1.0.0",
   "description": "Tadpull standard D3 graphs",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --reporter spec",
     "build": "tsc"
   },
   "repository": {
@@ -12,7 +13,7 @@
     "url": "git+https://github.com/Tadpull/d3-graphs.git"
   },
   "author": "Tadpull",
-  "license": "N/A",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Tadpull/d3-graphs/issues"
   },
@@ -21,11 +22,14 @@
     "@types/d3": "^6.3.0",
     "@types/jsdom": "^16.2.7",
     "@types/svg2png": "^4.1.0",
+    "chai": "^4.3.4",
+    "mocha": "^8.3.2",
     "typescript": "^4.2.3"
   },
   "dependencies": {
     "d3": "^6.6.1",
     "jsdom": "^16.5.1",
+    "output-file": "^2.0.2",
     "svg2png": "^4.1.1"
   }
 }
