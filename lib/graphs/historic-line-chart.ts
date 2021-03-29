@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import * as JSDOM from "jsdom";
 import { lineChartData, lineInfo } from "../global/chartObjects";
 import { chartOptions } from "../global/chartOptions";
-import { tpSchemeC } from "../global/tp-color-schemes";
+import { tpColors, tpSchemeC } from "../global/tp-color-schemes";
 
 
 export function renderHistoricLineChartToString(data: historicChartData, options: chartOptions): string {
@@ -11,7 +11,7 @@ export function renderHistoricLineChartToString(data: historicChartData, options
     return String(drawGraph(data, options, svg, () => { }, true, false));
 }
 
-export function renderHistoricLineChartGraphInline(data: historicChartData, options: chartOptions, elementId: string): void {
+export function renderHistoricLineChartInline(data: historicChartData, options: chartOptions, elementId: string): void {
     var svg = d3.select(`#${elementId}`);
     drawGraph(data, options, svg, () => { }, false, false, elementId);
 }
@@ -35,6 +35,12 @@ interface historicChartData extends lineChartData {
 
 function drawGraph(data: historicChartData, options: chartOptions, chart: any, callback: Function, convertToString: boolean = false, convertToImage: boolean = false, elementId: string | null = null): (void | string) {
     //function historicDataGraph(target, GraphData, width, height, d3valueformat, rounded)
+
+    if (!data.lines || data.lines.length == 0) {
+        throw new RangeError("There are no lines in the graph data.");
+    }
+
+
         const width = options.width || 600;
         const height = options.height || (width / 2);
         const d3valueformat = options.d3ValueFormat || ",";
@@ -79,7 +85,8 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
             const avg = data.average;
             const yAvg = y(avg);
             svg.append("line")
-                .attr("class", "line " + "gray-line")
+                .style("stroke", tpColors.grayLight)
+                //.attr("class", "line " + "gray-line")
                 .style("stroke-width", "2")
                 .style("stroke-dasharray", "8, 2")
                 .style("opacity", 0.5)
@@ -104,9 +111,11 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
                 var boundbottom = avg - (stddev * stddevs);
                 if (boundtop > 0 && boundtop <= maxTotalVal) {
                     let yVal = y(boundtop);
-                    chart.append("line")
-                        .attr("class", "line " + colors[colors.length - 1] + "-line")
+                    svg.append("line")
+                        //.attr("class", "line " + colors[colors.length - 1] + "-line")
+                        .style("stroke", color(data.lines.length.toString()))
                         .style("stroke-width", "2")
+                        .style("fill", "none")
                         .style("stroke-dasharray", "8, 2")
                         .style("opacity", 0.3)
                         .attr("x1", yAxisWidth + padding)
@@ -114,7 +123,7 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
                         .attr("x2", width - padding - 1 - (internalPadding / 2))
                         .attr("y2", yVal);
 
-                    chart.append("text")
+                    svg.append("text")
                         .style("opacity", 0.5)
                         .attr("y", yVal)
                         .attr("x", width - 1)
@@ -126,9 +135,11 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
                 }
                 if (boundbottom > 0 && boundbottom <= maxTotalVal) {
                     let yVal = y(boundbottom);
-                    chart.append("line")
-                        .attr("class", "line " + colors[colors.length - 1] + "-line")
+                    svg.append("line")
+                        .style("stroke", color(data.lines.length.toString()))
+                        //.attr("class", "line " + colors[colors.length - 1] + "-line")
                         .style("stroke-width", "2")
+                        .style("fill", "none")
                         .style("stroke-dasharray", "8, 2")
                         .style("opacity", 0.3)
                         .attr("x1", yAxisWidth + padding)
@@ -136,7 +147,7 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
                         .attr("x2", width - padding - 1 - (internalPadding / 2))
                         .attr("y2", yVal);
 
-                    chart.append("text")
+                    svg.append("text")
                         .style("opacity", 0.5)
                         .attr("y", yVal)
                         .attr("x", width - 1)
@@ -162,18 +173,21 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
             svg.append("g")
                 .attr("id", "line-" + i.toString())
                 .append("path").data([currentLine])
-                .attr("class", "line " + colors[i % colors.length] + "-line")
+                //.attr("class", "line " + colors[i % colors.length] + "-line")
+                .style("stroke", color(i.toString()))
+                .style("fill", "none")
                 .attr("d", lineFunction);
 
             if (i == 0) {
                 svg.append("circle") // Uses the enter().append() method
-                    .attr("class", "dot " + colors[colors.length - 1]) // Assign a class for styling
+                    //.attr("class", "dot " + colors[colors.length - 1]) // Assign a class for styling
+                    .style("fill", color(data.lines.length.toString()))
                     .attr("cx", x(currentLine.length - 1))
                     .attr("cy", y(currentLine[currentLine.length - 1]))
                     .attr("r", 6);
             }
 
-            //chart.append("circle") // Uses the enter().append() method
+            //svg.append("circle") // Uses the enter().append() method
             //    .attr("class", "dot " + color(i+1)) // Assign a class for styling
             //    .attr("cx", x(currentLine.length - 1))
             //    .attr("cy", y(currentLine[currentLine.length - 1]))
@@ -184,7 +198,7 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
         //let currentLine = GraphData["Bars"].map(function (b) {
         //    return b["Values"][0];
         //});
-        //chart.append("circle") // Uses the enter().append() method
+        //svg.append("circle") // Uses the enter().append() method
         //    .attr("class", "dot " + color(i-1)) // Assign a class for styling
         //    .attr("cx", x(currentLine.length - 1))
         //    .attr("cy", y(currentLine[currentLine.length - 1]))
@@ -225,18 +239,18 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
             let monthScale = d3.scaleBand()
                 .range([yAxisWidth + padding + internalPadding + month_ranges[i - 1], yAxisWidth + padding + internalPadding + month_ranges[i]])
 
-            let monthAxis = chart.append("g")
+            let monthAxis = svg.append("g")
                 .attr('transform', `translate(0, ${height - xAxisWidth})`)
                 .call(d3.axisBottom(monthScale).tickSize(-5));
 
             monthAxis.select(".domain").remove();
 
 
-            chart.append("text")
+            svg.append("text")
                 //.attr("class", "axis")
                 .style("font-size", ".85rem")
                 .style("opacity", "0.85")
-                .data(xLabels)
+                .data([xLabels])
                 .attr("y", height - xAxisWidth + 15)
                 .attr("x", yAxisWidth + padding + internalPadding + (month_ranges[i - 1] + (month_ranges[i] - month_ranges[i - 1]) / 2))
                 .style("text-anchor", "middle")
@@ -260,12 +274,12 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
         var ticks = dayDiff <= 15 ? d3.timeDay.every(1) : 15;
 
 
-        chart.append("g")
+        svg.append("g")
             .attr("transform", "translate(0, " + (height - xAxisWidth - padding) + ")")
             //.data(GraphData["Points"])
             .call(d3.axisBottom(xAxis).ticks(ticks)./*tickFormat(d3.timeFormat("%-d")).*/tickSizeOuter(0)).selectAll("text").style("text-anchor", "middle");
 
-        //var xAxisNode = chart.append('g');
+        //var xAxisNode = svg.append('g');
         //xAxisNode
         //    .attr("transform", "translate(0, " + (height - xAxisWidth) + ")")
         //    .call(d3.axisBottom().scale(xAxis).ticks(numMonths <= 1 ? 0.4 : d3.timeMonth.every(1)).tickFormat(d3.timeFormat("%B")).tickSizeOuter(0).tickSizeInner(0)).selectAll("text")
@@ -275,7 +289,7 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
         //.style("text-anchor", "end")
         //.attr("transform", "rotate(-45)");
 
-        chart.append("line")
+        svg.append("line")
             .style("stroke", "black")
             .style("stroke-width", "1")
             .attr("x1", yAxisWidth + padding)
@@ -283,7 +297,7 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
             .attr("x2", width - padding)
             .attr("y2", height - xAxisWidth - padding);
 
-        chart.append("text")
+        svg.append("text")
             .attr("transform",
                 "translate(" + ((width - yAxisWidth - padding) / 2 + yAxisWidth) + ", " +
                 (height - padding) + ")")
@@ -292,7 +306,7 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
 
         //y axis
 
-        chart.append("text")
+        svg.append("text")
             .attr("transform",
                 "translate(" + padding + ", " +
                 (((height - (padding * 2) - xAxisWidth) / 2) + padding) + ") rotate(-90)")
@@ -300,12 +314,12 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
             .style("text-anchor", "middle")
             .text(data.yLabel);
 
-        chart.append("g")
+        svg.append("g")
             .attr("transform", "translate(" + (yAxisWidth + padding) + ", 0)")
             .call(d3.axisLeft(y).tickFormat(function (d) { return d3.format(d3valueformat)(d); }));
 
     if (data.standardDeviation && data.standardDeviations) {
-            chart.append("text")
+            svg.append("text")
                 .style("opacity", 0.5)
                 .attr("y", height - 4)
                 .attr("x", width - 1)
@@ -317,5 +331,19 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
         }
 
 
-        return chart;
+    if (convertToImage || convertToString) {
+        let svgText: string = chart.html();
+
+
+        // Optionally convert SVG to PNG and return it to callback as data URI
+        if (convertToImage) {
+            svg2png(Buffer.from(svgText), { width: width, height: height })
+                .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
+                .then(buffer => callback(null, buffer))
+        }
+        // Otherwise return the HTML string
+        else if (convertToString) {
+            return svgText;
+        }
+    }
 }

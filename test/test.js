@@ -32,7 +32,62 @@ describe('graph functions test', () => {
             index.renderTestGraphToImageURI(callback, 400, 400);
         })
     }))
-    
+
+
+    promises.push(new Promise((resolve, reject) => {
+        it('should return historic data ribbit graph', () => {
+            let data = {
+                lines: [
+                    {
+                        points: [
+                            {
+                                value: 3,
+                                label: "3-27-2020",
+                            },
+                            {
+                                value: 8,
+                                label: "3-28-2020",
+                            },
+                            {
+                                value: 4,
+                                label: "3-29-2020",
+                            },
+                        ],
+                    },
+                    {
+                        points: [
+                            {
+                                value: 5,
+                                label: "3-27-2020",
+                            },
+                            {
+                                value: 6,
+                                label: "3-28-2020",
+                            },
+                            {
+                                value: 2,
+                                label: "3-29-2020",
+                            },
+                        ],
+                    }
+                ],
+
+                standardDeviations: 2.5,
+                average: 5,
+                standardDeviation: 1.1,
+            }
+            let options = {
+                width: 600,
+                height: 400,
+                d3ValueFormat: ","
+            }
+            var result = index.renderHistoricLineChartToString(data, options);
+            expect(result).to.be.a("string").that.contains("svg");
+            //innerHtml += `<h2>1. Sample Pie Chart</h2>${result}`;
+            let html = `<h2>3. Sample Historic Data Chart SVG</h2>${result}`;
+            resolve(html);
+        });
+    }));
 
     //PLACE LAST IN ORDER
     //Do not modify
