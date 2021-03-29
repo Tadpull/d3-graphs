@@ -176,6 +176,7 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
                 //.attr("class", "line " + colors[i % colors.length] + "-line")
                 .style("stroke", color(i.toString()))
                 .style("fill", "none")
+                .style("stroke-width", "4")
                 .attr("d", lineFunction);
 
             if (i == 0) {
