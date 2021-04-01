@@ -11,9 +11,8 @@ describe('graph functions test', () => {
 
     promises.push(new Promise((resolve, reject) => {
             it('should return a pie chart html string', () => {
-            var result = index.renderTestGraphToString(400, 400);
+                var result = index.renderTestGraphToString(() => { }, 400, 400);
             expect(result).to.be.a("string").that.contains("svg");
-                //innerHtml += `<h2>1. Sample Pie Chart</h2>${result}`;
                 let html = `<h2>1. Sample Pie Chart SVG</h2>${result}`;
             resolve(html);
         });
@@ -22,10 +21,7 @@ describe('graph functions test', () => {
     promises.push(new Promise((resolve, reject) => {
         it('should return a pie chart data URI', () => {
             let callback = (i, uri) => {
-                //console.log(i);
-                //console.log(uri);
                 expect(uri).to.be.a("string").that.has.length.above(0);
-                //innerHtml += `<h2>2. Sample Pie Chart Image</h2><img src='${uri}'/>`;
                 let html = `<h2>2. Sample Pie Chart Image</h2><img src='${uri}'/>`;
                 resolve(html);
             }
@@ -77,14 +73,13 @@ describe('graph functions test', () => {
     let historicOptions = {
         width: 600,
         height: 400,
-        d3ValueFormat: ","
+        d3ValueFormat: "$,"
     }
 
     promises.push(new Promise((resolve, reject) => {
         it('should return historic data ribbit graph', () => {
-            var result = index.renderHistoricLineChartToString(historicData, historicOptions);
+            var result = index.renderHistoricLineChartToString(() => { }, historicData, historicOptions);
             expect(result).to.be.a("string").that.contains("svg");
-            //innerHtml += `<h2>1. Sample Pie Chart</h2>${result}`;
             let html = `<h2>3. Sample Historic Data Chart SVG</h2>${result}`;
             resolve(html);
         });
@@ -97,11 +92,7 @@ describe('graph functions test', () => {
                 let html = `<h2>4. Sample Historic Data Chart Image</h2>$<img src='${uri}'>`;
                 resolve(html);
             }
-            var result = index.renderHistoricLineChartToImageURI(callback, historicData, historicOptions);
-            //expect(result).to.be.a("string").that.contains("svg");
-            ////innerHtml += `<h2>1. Sample Pie Chart</h2>${result}`;
-            //let html = `<h2>3. Sample Historic Data Chart SVG</h2>${result}`;
-            //resolve(html);
+            index.renderHistoricLineChartToImageURI(callback, historicData, historicOptions);
         });
     }));
 

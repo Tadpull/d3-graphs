@@ -4,9 +4,9 @@ import * as JSDOM from "jsdom";
 import { tpDefaultScheme } from "../global/tp-color-schemes";
 
 
-export function renderTestGraphToString(width: number, height: number): string {
+export function renderTestGraphToString(callback: Function, width: number, height: number): string {
     var svg = getChartJSDOM();
-    return String(drawTestGraph(svg, () => { }, width, height, true, false));
+    return String(drawTestGraph(svg, callback, width, height, true, false));
 }
 
 export function renderTestGraphInline(elementId: string, width: number, height: number): void {
