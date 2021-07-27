@@ -7,7 +7,8 @@
   "scripts": {
     "test": "mocha --reporter spec",
     "build": "tsc",
-    "output": "tsc && mocha --reporter spec"
+    "output": "tsc && mocha --reporter spec",
+    "export": "tsc --out dist/compiled.js lib/index.ts --module amd --moduleResolution node"
   },
   "repository": {
     "type": "git",

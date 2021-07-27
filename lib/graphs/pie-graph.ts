@@ -93,7 +93,22 @@ function drawGraph(data: DataResults[], displaySettings: PieGraphSettings, size:
 
     const labels = svg.append("g").attr("transform", 'translate(' + (paddingLR) + ", " + (height - paddingTB) + ")");
     for (var i = 0; i < totalWedges; i++) {
-        
+        let size = 20;
+        let xStart = ((i % 3) / 3) * radius * 2;
+        let yStart = Math.floor(i / 3) + 10;
+        labels.append("rect")
+            .attr("x", xStart)
+            .attr("y", yStart)
+            .attr("width", size * 2)
+            .attr("height", size)
+            .style("fill", color(i.toString()))
+
+        labels.append("text")
+            .attr("x", xStart +  (size * 2) + 10)
+            .attr("y", yStart + (size / 2))
+            .text(results[i].DimensionValues.get(dim.name) || "")
+            .style("alignment-baseline", "middle")
+        .attr("text-anchor", "left")
     }
         //.attr("d", arc).on('mouseover', function (event, d) {
         //    d3.select(this).transition()
