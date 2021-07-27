@@ -96,6 +96,60 @@ describe('graph functions test', () => {
         });
     }));
 
+
+    let genderdata = [
+        {
+            Start: "2021-01-01",
+            End: "2021-01-31",
+            Totals: new Map(),
+            Metrics: [
+                {
+                    name: "ga:users",
+                    displayName: "Users"
+                }
+            ],
+            Dimensions: [
+                {
+                    name: "ga:gender",
+                    displayName: "Gender"
+                }
+            ],
+            ResultRows: [
+                {
+                    MetricValues: new Map(),
+                    DimensionValues: new Map()
+                },
+                {
+                    MetricValues: new Map(),
+                    DimensionValues: new Map()
+                }
+            ]
+        }
+    ];
+
+    genderdata[0].ResultRows[0].MetricValues.set("ga:users", "200");
+    genderdata[0].ResultRows[0].DimensionValues.set("ga:gender", "Male");
+    genderdata[0].ResultRows[1].MetricValues.set("ga:users", "315");
+    genderdata[0].ResultRows[1].DimensionValues.set("ga:gender", "Female");
+
+    let genderDisplaySettings = {
+    }
+
+    let genderSizeSettings = {
+        width: 600,
+    }
+
+    promises.push(new Promise((resolve, reject) => {
+        it('should render pie graph to image', () => {
+            let callback = (i, uri) => {
+                expect(uri).to.be.a("string").that.has.length.above(0);
+                let html = `<h2>5. Sample Pie Data Chart Image</h2>$<img src='${uri}'>`;
+                resolve(html);
+            }
+            index.renderPieGraphToImageURI(callback, genderdata, genderDisplaySettings, genderSizeSettings);
+        });
+    }));
+
     //PLACE LAST IN ORDER
     //Do not modify
     //This one outputs the HTML to file
