@@ -150,6 +150,17 @@ describe('graph functions test', () => {
         });
     }));
 
+    //promises.push(new Promise((resolve, reject) => {
+    //    it('should render pie graph inline', () => {
+    //        let callback = (i, uri) => {
+    //            expect(uri).to.be.a("string").that.has.length.above(0);
+    //            let html = `<h2>5. Sample Pie Data Chart Image</h2>$<img src='${uri}'>`;
+    //            resolve(html);
+    //        }
+    //        index.renderPieGraphInline(genderdata, genderDisplaySettings, genderSizeSettings);
+    //    });
+    //}));
+
     //PLACE LAST IN ORDER
     //Do not modify
     //This one outputs the HTML to file

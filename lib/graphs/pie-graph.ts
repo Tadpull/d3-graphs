@@ -22,7 +22,7 @@ export function renderPieGraphToImageURI(callback: Function, data: DataResults[]
 }
 
 function getChartJSDOM() {
-    let dom = new JSDOM.JSDOM('<html><body><div id="chart"></div></html>');
+    let dom = new JSDOM.JSDOM('<html><body><div id="chart"></div><div id="tooltip"></div></body></html>');
     dom.window.d3 = d3.select(dom.window.document);
     return dom.window.d3.select('#chart')
 }
@@ -84,12 +84,65 @@ function drawGraph(data: DataResults[], displaySettings: PieGraphSettings, size:
         .append("g")
         .attr("class", "arc");
 
-    arcs.append("path")
-        .attr("fill",
-            function (d: any, i: number) {
-                return color(i.toString());
+    if (!convertToImage && !convertToString) {
+        let div = d3.select("body").append("div")
+            .style("position", "absolute")
+            .style("text-align", "center")
+            .style("padding", ".2rem")
+            .style("border", "1px solid lightgray")
+            .style("border-radius", "4px")
+            .style("pointer-events", "none")
+            .style("background", "white")
+            .style("color", "darkgray")
+            .style("z-index", "1000");
+
+
+        var tooltip = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .style("background", "#000")
+            .text("a simple tooltip");
+
+
+        arcs.append("path")
+            .attr("fill",
+                function (d: any, i: number) {
+                    return color(i.toString());
+                })
+            .attr("d", arc)
+            .on("mouseover", function (event: any, d: any) {
+                tooltip.text(d).style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 15) + "px"); return tooltip.style("visibility", "visible");
             })
-        .attr("d", arc);
+            .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
+        /* 
+         * div.d3-tooltip {
+      position: absolute;
+      text-align: center;
+      padding: .2rem;
+      border: 1px solid $gray-light;
+      border-radius: 4px;
+      pointer-events: none;
+      background: white;
+      color: $gray-dark;
+      z-index: 1000;
+    }
+         */
+    }
+    else {
+        arcs.append("path")
+            .attr("fill",
+                function (d: any, i: number) {
+                    return color(i.toString());
+                })
+            .attr("d", arc)
+    }
+        
+
+        //.on("mousemove", function (event: ) { return tooltip.style("top", (event.d - 10) + "px").style("left", (d3.event.pageX + 10) + "px"); })
+
 
     const labels = svg.append("g").attr("transform", 'translate(' + (paddingLR) + ", " + (height - paddingTB) + ")");
     for (var i = 0; i < totalWedges; i++) {
