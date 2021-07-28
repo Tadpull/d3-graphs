@@ -1,33 +1,33 @@
-﻿import * as svg2png from "svg2png";
+﻿//import * as svg2png from "svg2png";
 import * as d3 from "d3";
-import * as JSDOM from "jsdom";
+//import * as JSDOM from "jsdom";
 import { ISizeSettings, PieGraphSettings } from "../global/chartOptions";
 import { tpColors, tpSchemeB, tpSchemeC } from "../global/tp-color-schemes";
 import { DataResults } from "../global/dataObjects";
 
 
-export function renderPieGraphToString(callback: Function, data: DataResults[], options: PieGraphSettings, size: ISizeSettings): string {
-    var svg = getChartJSDOM();
-    return String(drawGraph(data, options, size, svg, callback, true, false));
-}
+//export function renderPieGraphToString(callback: Function, data: DataResults[], options: PieGraphSettings, size: ISizeSettings): string {
+//    var svg = getChartJSDOM();
+//    return String(drawGraph(data, options, size, svg, callback, true, false));
+//}
 
-export function renderPieGraphInline(data: DataResults[], options: PieGraphSettings, size: ISizeSettings, elementId: string): void {
-    var svg = d3.select(`#${elementId}`);
-    drawGraph(data, options, size, svg, () => { }, false, false, elementId);
-}
+//export function renderPieGraphInline(data: DataResults[], options: PieGraphSettings, size: ISizeSettings, elementId: string): void {
+//    var svg = d3.select(`#${elementId}`);
+//    drawGraph(data, options, size, svg, () => { }, false, false, elementId);
+//}
 
-export function renderPieGraphToImageURI(callback: Function, data: DataResults[], options: PieGraphSettings, size: ISizeSettings): void {
-    var svg = getChartJSDOM();
-    drawGraph(data, options, size, svg, callback, false, true);
-}
+//export function renderPieGraphToImageURI(callback: Function, data: DataResults[], options: PieGraphSettings, size: ISizeSettings): void {
+//    var svg = getChartJSDOM();
+//    drawGraph(data, options, size, svg, callback, false, true);
+//}
 
-function getChartJSDOM() {
-    let dom = new JSDOM.JSDOM('<html><body><div id="chart"></div><div id="tooltip"></div></body></html>');
-    dom.window.d3 = d3.select(dom.window.document);
-    return dom.window.d3.select('#chart')
-}
+//function getChartJSDOM() {
+//    let dom = new JSDOM.JSDOM('<html><body><div id="chart"></div><div id="tooltip"></div></body></html>');
+//    dom.window.d3 = d3.select(dom.window.document);
+//    return dom.window.d3.select('#chart')
+//}
 
-function drawGraph(data: DataResults[], displaySettings: PieGraphSettings, size: ISizeSettings, chart: any, callback: Function, convertToString: boolean = false, convertToImage: boolean = false, elementId: string | null = null): (void | string) {
+export function pieGraph(chart: any, data: DataResults[], displaySettings: PieGraphSettings, size: ISizeSettings)/*, callback: Function, convertToString: boolean = false, convertToImage: boolean = false, elementId: string | null = null): (void | string)*/ {
 
     if (!data || data.length != 1 || !data[0].ResultRows || data[0].ResultRows.length < 1 || data[0].Metrics.length != 1 || data[0].Dimensions.length != 1) {
         throw new RangeError("Input data in unexpected format.");
@@ -84,39 +84,43 @@ function drawGraph(data: DataResults[], displaySettings: PieGraphSettings, size:
         .append("g")
         .attr("class", "arc");
 
-    if (!convertToImage && !convertToString) {
-        let div = d3.select("body").append("div")
-            .style("position", "absolute")
-            .style("text-align", "center")
-            .style("padding", ".2rem")
-            .style("border", "1px solid lightgray")
-            .style("border-radius", "4px")
-            .style("pointer-events", "none")
-            .style("background", "white")
-            .style("color", "darkgray")
-            .style("z-index", "1000");
+     //if (!convertToImage && !convertToString) {
+     //   let div = d3.select("body").append("div")
+     //       .style("position", "absolute")
+     //       .style("text-align", "center")
+     //       .style("padding", ".2rem")
+     //       .style("border", "1px solid lightgray")
+     //       .style("border-radius", "4px")
+     //       .style("pointer-events", "none")
+     //       .style("background", "white")
+     //       .style("color", "darkgray")
+     //       .style("z-index", "1000");
 
 
-        var tooltip = d3.select("body")
-            .append("div")
-            .style("position", "absolute")
-            .style("z-index", "10")
-            .style("visibility", "hidden")
-            .style("background", "#000")
-            .text("a simple tooltip");
+     //   var tooltip = d3.select("body")
+     //       .append("div")
+     //       .style("position", "absolute")
+     //       .style("z-index", "10")
+     //       .style("visibility", "hidden")
+     //       .style("background", "#000")
+     //       .text("a simple tooltip");
 
 
-        arcs.append("path")
-            .attr("fill",
-                function (d: any, i: number) {
-                    return color(i.toString());
-                })
-            .attr("d", arc)
-            .on("mouseover", function (event: any, d: any) {
-                tooltip.text(d).style("left", (event.pageX + 10) + "px")
-                    .style("top", (event.pageY - 15) + "px"); return tooltip.style("visibility", "visible");
+    arcs.append("path")
+        .attr("fill",
+            function (d: any, i: number) {
+                return color(i.toString());
             })
-            .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
+        .attr("data-content", function (d: any, i: number) {
+
+        })
+        .attr("class", "d3-tooltip")
+        .attr("d", arc);
+            //.on("mouseover", function (event: any, d: any) {
+            //    tooltip.text(d).style("left", (event.pageX + 10) + "px")
+            //        .style("top", (event.pageY - 15) + "px"); return tooltip.style("visibility", "visible");
+            //})
+            //.on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
         /* 
          * div.d3-tooltip {
       position: absolute;
@@ -130,15 +134,15 @@ function drawGraph(data: DataResults[], displaySettings: PieGraphSettings, size:
       z-index: 1000;
     }
          */
-    }
-    else {
-        arcs.append("path")
-            .attr("fill",
-                function (d: any, i: number) {
-                    return color(i.toString());
-                })
-            .attr("d", arc)
-    }
+    //}
+    //else {
+        //arcs.append("path")
+        //    .attr("fill",
+        //        function (d: any, i: number) {
+        //            return color(i.toString());
+        //        })
+        //    .attr("d", arc)
+    //}
         
 
         //.on("mousemove", function (event: ) { return tooltip.style("top", (event.d - 10) + "px").style("left", (d3.event.pageX + 10) + "px"); })
@@ -169,24 +173,24 @@ function drawGraph(data: DataResults[], displaySettings: PieGraphSettings, size:
 
    
 
-    if (convertToImage || convertToString) {
-        let svgText: string = chart.html();
+    //if (convertToImage || convertToString) {
+    //    let svgText: string = chart.html();
 
 
-        // Optionally convert SVG to PNG and return it to callback as data URI
-        if (convertToImage) {
-            svg2png(Buffer.from(svgText), { width: width, height: height })
-                .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
-                .then(buffer => {
-                    callback(null, buffer);
-                    return buffer;
-                });
-        }
-        // Otherwise return the HTML string
-        else if (convertToString) {
-            callback(null, svgText);
-            return svgText;
-            //return svgText;
-        }
-    }
+    //    // Optionally convert SVG to PNG and return it to callback as data URI
+    //    if (convertToImage) {
+    //        svg2png(Buffer.from(svgText), { width: width, height: height })
+    //            .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
+    //            .then(buffer => {
+    //                callback(null, buffer);
+    //                return buffer;
+    //            });
+    //    }
+    //    // Otherwise return the HTML string
+    //    else if (convertToString) {
+    //        callback(null, svgText);
+    //        return svgText;
+    //        //return svgText;
+    //    }
+    //}
 }

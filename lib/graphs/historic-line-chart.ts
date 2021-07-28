@@ -1,31 +1,8 @@
-﻿import * as svg2png from "svg2png";
-import * as d3 from "d3";
-import * as JSDOM from "jsdom";
+﻿import * as d3 from "d3";
 import { lineChartData, lineInfo } from "../global/chartObjects";
 import { chartOptions } from "../global/chartOptions";
 import { tpColors, tpSchemeC } from "../global/tp-color-schemes";
 
-
-export function renderHistoricLineChartToString(callback: Function, data: historicChartData, options: chartOptions): string {
-    var svg = getChartJSDOM();
-    return String(drawGraph(data, options, svg, callback, true, false));
-}
-
-export function renderHistoricLineChartInline(data: historicChartData, options: chartOptions, elementId: string): void {
-    var svg = d3.select(`#${elementId}`);
-    drawGraph(data, options, svg, () => { }, false, false, elementId);
-}
-
-export function renderHistoricLineChartToImageURI(callback: Function, data: historicChartData, options: chartOptions): void {
-    var svg = getChartJSDOM();
-    drawGraph(data, options, svg, callback, false, true);
-}
-
-function getChartJSDOM() {
-    let dom = new JSDOM.JSDOM('<html><body><div id="chart"></div></html>');
-    dom.window.d3 = d3.select(dom.window.document);
-    return dom.window.d3.select('#chart')
-}
 
 interface historicChartData extends lineChartData {
     standardDeviations?: number,
@@ -33,7 +10,7 @@ interface historicChartData extends lineChartData {
     standardDeviation?: number,
 }
 
-function drawGraph(data: historicChartData, options: chartOptions, chart: any, callback: Function, convertToString: boolean = false, convertToImage: boolean = false, elementId: string | null = null): (void | string) {
+export function historicLineGraph(data: historicChartData, options: chartOptions, chart: any, callback: Function, convertToString: boolean = false, convertToImage: boolean = false, elementId: string | null = null): (void | string) {
 
     if (!data.lines || data.lines.length == 0) {
         throw new RangeError("There are no lines in the graph data.");
@@ -285,24 +262,24 @@ function drawGraph(data: historicChartData, options: chartOptions, chart: any, c
         }
 
 
-    if (convertToImage || convertToString) {
-        let svgText: string = chart.html();
+    //if (convertToImage || convertToString) {
+    //    let svgText: string = chart.html();
 
 
-        // Optionally convert SVG to PNG and return it to callback as data URI
-        if (convertToImage) {
-            svg2png(Buffer.from(svgText), { width: width, height: height })
-                .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
-                .then(buffer => {
-                    callback(null, buffer);
-                    return buffer;
-                });
-        }
-        // Otherwise return the HTML string
-        else if (convertToString) {
-            callback(null, svgText);
-            return svgText;
-            //return svgText;
-        }
-    }
+    //    // Optionally convert SVG to PNG and return it to callback as data URI
+    //    if (convertToImage) {
+    //        svg2png(Buffer.from(svgText), { width: width, height: height })
+    //            .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
+    //            .then(buffer => {
+    //                callback(null, buffer);
+    //                return buffer;
+    //            });
+    //    }
+    //    // Otherwise return the HTML string
+    //    else if (convertToString) {
+    //        callback(null, svgText);
+    //        return svgText;
+    //        //return svgText;
+    //    }
+    //}
 }

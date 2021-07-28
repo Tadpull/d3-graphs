@@ -1,31 +1,31 @@
-﻿import * as svg2png from "svg2png";
+﻿//import * as svg2png from "svg2png";
 import * as d3 from "d3";
-import * as JSDOM from "jsdom";
+//import * as JSDOM from "jsdom";
 import { tpDefaultScheme } from "../global/tp-color-schemes";
 
 
-export function renderTestGraphToString(callback: Function, width: number, height: number): string {
-    var svg = getChartJSDOM();
-    return String(drawTestGraph(svg, callback, width, height, true, false));
-}
+//export function renderTestGraphToString(callback: Function, width: number, height: number): string {
+//    var svg = getChartJSDOM();
+//    return String(drawTestGraph(svg, callback, width, height, true, false));
+//}
 
-export function renderTestGraphInline(elementId: string, width: number, height: number): void {
-    var svg = d3.select(`#${elementId}`);
-    drawTestGraph(svg, () => { }, width, height, false, false, elementId);
-}
+//export function renderTestGraphInline(elementId: string, width: number, height: number): void {
+//    var svg = d3.select(`#${elementId}`);
+//    drawTestGraph(svg, () => { }, width, height, false, false, elementId);
+//}
 
-export function renderTestGraphToImageURI(callback: Function, width: number, height: number): void {
-    var svg = getChartJSDOM();
-    drawTestGraph(svg, callback, width, height, false, true);
-}
+//export function renderTestGraphToImageURI(callback: Function, width: number, height: number): void {
+//    var svg = getChartJSDOM();
+//    drawTestGraph(svg, callback, width, height, false, true);
+//}
 
-function getChartJSDOM() {
-    let dom = new JSDOM.JSDOM('<html><body><div id="chart"></div></html>');
-    dom.window.d3 = d3.select(dom.window.document);
-    return dom.window.d3.select('#chart')
-}
+//function getChartJSDOM() {
+//    let dom = new JSDOM.JSDOM('<html><body><div id="chart"></div></html>');
+//    dom.window.d3 = d3.select(dom.window.document);
+//    return dom.window.d3.select('#chart')
+//}
 
-function drawTestGraph(chart: any, callback: Function, width: number, height: number, convertToString: boolean = false, convertToImage: boolean = false, elementId: string |null = null): (void | string) {
+export function testGraph(chart: any, callback: Function, width: number, height: number, convertToString: boolean = false, convertToImage: boolean = false, elementId: string |null = null): (void | string) {
 
     const radius = Math.min(width, height) / 2;
 
@@ -108,19 +108,19 @@ function drawTestGraph(chart: any, callback: Function, width: number, height: nu
             });;
     }
 
-    if (convertToImage || convertToString) {
-        let svgText: string = chart.html();
+    //if (convertToImage || convertToString) {
+    //    let svgText: string = chart.html();
 
 
-        // Optionally convert SVG to PNG and return it to callback as data URI
-        if (convertToImage) {
-            svg2png(Buffer.from(svgText), { width: width, height: height })
-                    .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
-                    .then(buffer => callback(null, buffer))
-        }
-        // Otherwise return the HTML string
-        else if (convertToString) {
-            return svgText;
-        }
-    }
+    //    // Optionally convert SVG to PNG and return it to callback as data URI
+    //    if (convertToImage) {
+    //        svg2png(Buffer.from(svgText), { width: width, height: height })
+    //                .then(buffer => 'data:image/png;base64,' + buffer.toString('base64'))
+    //                .then(buffer => callback(null, buffer))
+    //    }
+    //    // Otherwise return the HTML string
+    //    else if (convertToString) {
+    //        return svgText;
+    //    }
+    //}
 }
