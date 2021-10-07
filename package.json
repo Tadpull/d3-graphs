@@ -1,6 +1,6 @@
 {
   "name": "tadpull-d3-graphs",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Tadpull standard D3 graphs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
