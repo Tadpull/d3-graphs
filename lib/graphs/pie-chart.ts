@@ -4,7 +4,8 @@ import { tpSchemeB } from '../objects/colors';
 
 export function drawPieChart(chart: any, data: DataResults[], size: ISizeSettings, display: PieGraphSettings, tooltipId?: string | null): void {
     const div = d3.select(tooltipId?.toString() || "div#tooltip");
-
+size = size || {}
+display = display || new PieGraphSettings();
 console.log(data);
 
 if (!data || data.length != 1 || !data[0].ResultRows || data[0].ResultRows.length < 1 || data[0].Metrics.length != 1 || data[0].Dimensions.length != 1) {
