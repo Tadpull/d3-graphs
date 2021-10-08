@@ -200,6 +200,7 @@ export function drawStackedBarChart(chart: any, data: DataResults[], size: ISize
       //.data(this.model.values["Points"])
       .call(d3.axisBottom(xAxis)).selectAll("text")
       .style("text-anchor", "end")
+      .style("text-transform", "capitalize")
       .attr("transform", "rotate(-45)");
 
     chart.append("text")

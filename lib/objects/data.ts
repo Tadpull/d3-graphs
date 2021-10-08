@@ -82,3 +82,14 @@ export class DataResults {
     PageSize: number = 10;
     SortByDefault: string;
   }
+
+  
+export interface IDataGroup {
+  name: string;
+  displayName: string;
+  points: IDataPoint[]
+}
+export interface IDataPoint {
+  x?: any;
+  y?: number | string;
+}

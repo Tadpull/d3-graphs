@@ -55,7 +55,9 @@ PieGraphSettings,
 HorizontalBarGraphSettings,
 TileGraphSettings,
 StackedBarGraphSettings,
-TableSettings
+TableSettings,
+IDataGroup,
+IDataPoint,
  } from './objects/data';
 
 export {
@@ -65,6 +67,8 @@ export {
     tpSchemeB,
     tpSchemeC,
     //dataObjects,
+    IDataGroup,
+    IDataPoint,
     DataResults,
     DataResultRow,
     IMetric,
