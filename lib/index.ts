@@ -22,6 +22,16 @@
 import * as tpColorSchemes from './objects/colors';
 import * as dataObjects from './objects/data';
 
+import {
+ parseDate,
+ parseDates,
+ dateMerge,
+ mergeLabels,
+ GetDateLabels,
+MapDateDimensions,
+monthNames,
+weekdayNames
+} from './functions/helpers'
 
 import { drawPieChart } from './graphs/pie-chart';
 import { DataResultRow,
@@ -53,5 +63,13 @@ export {
     TileGraphSettings,
     StackedBarGraphSettings,
     TableSettings,
-    drawPieChart
+    drawPieChart,
+    parseDate,
+    parseDates,
+    dateMerge,
+    mergeLabels,
+    GetDateLabels,
+    MapDateDimensions,
+    monthNames,
+    weekdayNames
 };
