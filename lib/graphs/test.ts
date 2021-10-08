@@ -105,7 +105,7 @@ export function testGraph(chart: any, callback: Function, width: number, height:
                 div.transition()
                     .duration(50)
                     .style("opacity", 0);
-            });;
+            });
     }
 
     //if (convertToImage || convertToString) {

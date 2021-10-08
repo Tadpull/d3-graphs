@@ -42,6 +42,8 @@ weekdayNames
 } from './functions/helpers'
 
 import { drawPieChart } from './graphs/pie-chart';
+import { drawStackedBarChart } from './graphs/stacked-bar-chart';
+
 import { DataResultRow,
     DataResults,
 IMetric,
@@ -76,6 +78,7 @@ export {
     StackedBarGraphSettings,
     TableSettings,
     drawPieChart,
+    drawStackedBarChart,
     parseDate,
     parseDates,
     dateMerge,
