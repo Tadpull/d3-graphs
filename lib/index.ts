@@ -24,10 +24,34 @@ import * as dataObjects from './objects/data';
 
 
 import { drawPieChart } from './graphs/pie-chart';
+import { DataResultRow,
+    DataResults,
+IMetric,
+IDimension,
+NumberSettings,
+ISizeSettings,
+LineGraphSettings,
+PieGraphSettings,
+HorizontalBarGraphSettings,
+TileGraphSettings,
+StackedBarGraphSettings,
+TableSettings
+ } from './objects/data';
 
 export {
     tpColorSchemes,
     dataObjects,
-
+    DataResults,
+    DataResultRow,
+    IMetric,
+    IDimension,
+    NumberSettings,
+    ISizeSettings,
+    LineGraphSettings,
+    PieGraphSettings,
+    HorizontalBarGraphSettings,
+    TileGraphSettings,
+    StackedBarGraphSettings,
+    TableSettings,
     drawPieChart
 };
