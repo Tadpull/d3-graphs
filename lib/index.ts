@@ -19,8 +19,16 @@
 //     dataObjects,
 // };
 
-import * as tpColorSchemes from './objects/colors';
-import * as dataObjects from './objects/data';
+//import * as tpColorSchemes from './objects/colors';
+//import * as dataObjects from './objects/data';
+
+import {
+ tpColors,
+ tpDefaultScheme,
+ tpSchemeA,
+ tpSchemeB,
+ tpSchemeC
+} from './objects/colors'
 
 import {
  parseDate,
@@ -49,8 +57,12 @@ TableSettings
  } from './objects/data';
 
 export {
-    tpColorSchemes,
-    dataObjects,
+    tpColors,
+    tpDefaultScheme,
+    tpSchemeA,
+    tpSchemeB,
+    tpSchemeC,
+    //dataObjects,
     DataResults,
     DataResultRow,
     IMetric,
