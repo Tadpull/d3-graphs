@@ -220,7 +220,7 @@ export function drawLineChart(chart: any, data: DataResults[], size: ISizeSettin
       GetDateLabels(data[0].Start, data[0].End, data[1].Start, data[1].End) :
       (data[0].Dimensions.length == 2 ?
         lines.map(x => x.displayName) : []);
-    const labels = this.chart.append("g").attr("transform", 'translate(' + (xAxisWidth + (padding * 2)) + ", " + 0 + ")");
+    const labels = chart.append("g").attr("transform", 'translate(' + (xAxisWidth + (padding * 2)) + ", " + 0 + ")");
     for (var i = 0; i < linelabels.length; i++) {
       let size = 20;
       let xStart = (((i % 4) / 4) * (width - xAxisWidth - (4 * padding)));

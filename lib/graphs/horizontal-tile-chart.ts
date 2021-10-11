@@ -5,8 +5,8 @@ import { tpColors } from '../objects/colors';
 export function drawHorizontalTileChart(chart: any, data: DataResults[], size: ISizeSettings, display: TileGraphSettings, tooltipId?: string | null): void {
 
     size = size || {
-      width: this.width,
-      height: this.height,
+      width: 600,
+      height: 600,
     }
     display = display || new TileGraphSettings();
 
@@ -26,7 +26,7 @@ export function drawHorizontalTileChart(chart: any, data: DataResults[], size: I
       throw new RangeError("Input data in unexpected format.");
     }
 
-    let height = this.height,
+    let height = size.height || 600,
       padding = 10,
       yAxisWidth = display.YAxisWidth || 90,
       xAxisWidth = 30;
