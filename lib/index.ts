@@ -43,6 +43,10 @@ weekdayNames
 
 import { drawPieChart } from './graphs/pie-chart';
 import { drawStackedBarChart } from './graphs/stacked-bar-chart';
+import { drawHorizontalBarChart } from './graphs/horizontal-bar-chart';
+import { drawLineChart } from './graphs/line-graph';
+import { drawHorizontalTileChart } from './graphs/horizontal-tile-chart';
+import { drawUsaGeoChart } from './graphs/usa-geo-chart';
 
 import { DataResultRow,
     DataResults,
@@ -83,6 +87,10 @@ export {
     TableSettings,
     drawPieChart,
     drawStackedBarChart,
+    drawHorizontalBarChart,
+    drawLineChart,
+    drawHorizontalTileChart,
+    drawUsaGeoChart,
     parseDate,
     parseDates,
     dateMerge,
