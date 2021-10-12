@@ -1,5 +1,5 @@
 ﻿// import { testGraph } from "./graphs/test";
-// import { historicLineGraph } from "./graphs/historic-line-chart";
+import { historicLineGraph } from "./graphs/historic-line-chart";
 // import { pieGraph } from "./graphs/pie-graph";
 // import * as tpColorSchemes from "./global/tp-color-schemes";
 // import * as chartOptions from "./global/chartOptions";
@@ -14,7 +14,7 @@
 //     pieGraph,
 
 //     tpColorSchemes,
-//     chartOptions,
+//     chartOptions,s
 //     chartObjects,
 //     dataObjects,
 // };
@@ -100,5 +100,7 @@ export {
     GetDateLabels,
     MapDateDimensions,
     monthNames,
-    weekdayNames
+    weekdayNames,
+
+    historicLineGraph,
 };

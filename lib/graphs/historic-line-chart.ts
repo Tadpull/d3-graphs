@@ -10,7 +10,7 @@ interface historicChartData extends lineChartData {
     standardDeviation?: number,
 }
 
-export function historicLineGraph(data: historicChartData, options: chartOptions, chart: any, callback: Function, convertToString: boolean = false, convertToImage: boolean = false, elementId: string | null = null): (void | string) {
+export function historicLineGraph(data: historicChartData, options: chartOptions, chart: any/*, callback: Function, convertToString: boolean = false, convertToImage: boolean = false, elementId: string | null = null*/): void {
 
     if (!data.lines || data.lines.length == 0) {
         throw new RangeError("There are no lines in the graph data.");
