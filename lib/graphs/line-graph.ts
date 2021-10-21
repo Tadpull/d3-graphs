@@ -15,6 +15,14 @@ export function drawLineChart(chart: any, data: DataResults[], size: ISizeSettin
     if (tooltipId) {
       var div = d3.select(tooltipId);
     }
+
+    size = size || {
+      width: 800,
+      height: 600
+    }
+
+    display = display || new LineGraphSettings();
+
     const d3valueformat = display?.YAxisFormat || ",";
     const colors = display.LineColors || tpSchemeA;
     const width = size?.width || 800;
@@ -148,7 +156,7 @@ export function drawLineChart(chart: any, data: DataResults[], size: ISizeSettin
       .domain([minTotalVal * (minTotalVal < 0 ? 1.05 : .95), maxTotalVal * 1.05])
       .range([height - padding - xAxisWidth, padding]);
 
-    const lineFunction = display.RoundedCorners ? d3.line()
+    const lineFunction = rounded ? d3.line()
       .x(function (d, i) { return x(i); })
       .y(function (d) { return y(Number(d)); })
       .curve(d3.curveMonotoneX)

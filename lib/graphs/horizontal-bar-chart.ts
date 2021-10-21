@@ -13,8 +13,16 @@ export function drawHorizontalBarChart(chart: any, data: DataResults[], size: IS
     if (tooltipId) {
       var div = d3.select(tooltipId);
     }
+
+    size = size || {
+      width: 800,
+      height: 600,
+    }
+
+    display = display || new HorizontalBarGraphSettings();
+
     const colors = display?.Colors || [tpColors.greenDark, tpColors.pink];
-    const width = size.width;
+    const width = size?.width || 800;
     const d3valueformat = display.LabelFormat || ",d";
 
     const horizontalPadding = 30,
