@@ -113,7 +113,7 @@ export function drawBarChart(chart: any, data: DataResults[], size: ISizeSetting
     }
 
     //middle bar
-    const mid = vert ? height - (verticalPadding * 2) - xAxisWidth :
+    const mid = vert ? y(0) + verticalPadding :
     horizontalPadding + yAxisWidth + x(0) + ((width - (horizontalPadding * 2) - yAxisWidth) / 2);
     if (isComparison) {
       if(vert){
@@ -141,13 +141,13 @@ export function drawBarChart(chart: any, data: DataResults[], size: ISizeSetting
       let barlen = vert ? y(Math.abs(val)) : x(Math.abs(val));
       let barcolor = val >= 0 ? color : negColor;
       if (isComparison) {
-        start += -(vert ? (height - (verticalPadding * 2) - xAxisWidth) / 2 : ((width - (horizontalPadding * 2) - yAxisWidth) / 2));
+        start += vert ? -((height - (verticalPadding * 2) - xAxisWidth) / 2) : ((width - (horizontalPadding * 2) - yAxisWidth) / 2);
         barlen /= 2;
         if (val >= 0) {
 
         }
         else {
-          start = start - barlen;
+          start = vert ? start + barlen : start - barlen;
         }
       }
       body.append("rect")
