@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
-import { DataResults, ISizeSettings, HorizontalBarGraphSettings } from '../objects/data';
+import { DataResults, ISizeSettings, BarGraphSettings } from '../objects/data';
 import { tpColors } from '../objects/colors';
 import { dateMerge } from '../functions/helpers';
-export function drawHorizontalBarChart(chart: any, data: DataResults[], size: ISizeSettings, display: HorizontalBarGraphSettings, tooltipId?: string | null): void {
+export function drawBarChart(chart: any, data: DataResults[], size: ISizeSettings, display: BarGraphSettings, tooltipId?: string | null): void {
 
     if (!data || data.length > 2 || data[0].Metrics?.length != 1 || data[0].Dimensions?.length != 1) {
       throw new Error("Data was in an incorrect format.");
@@ -15,22 +15,24 @@ export function drawHorizontalBarChart(chart: any, data: DataResults[], size: IS
     }
 
     size = size || {
-      width: 800,
-      height: 600,
+      width: 700,
     }
 
-    display = display || new HorizontalBarGraphSettings();
+    display = display || new BarGraphSettings();
 
     const colors = display?.Colors || [tpColors.greenDark, tpColors.pink];
-    const width = size?.width || 800;
+    let width = size?.width || 700;
     const d3valueformat = display.LabelFormat || ",d";
+
+    //graph orientation, vertical or horizontal bars
+    const vert = display?.Vertical || false;
 
     const horizontalPadding = 30,
     verticalPadding = 30,
     yAxisWidth = 120,
-    xAxisWidth = 75,
-    barThickness = 30,
-    barPadding = 15;
+    xAxisWidth = 75;
+    let barThickness = display.BarThickness || 30,
+    barPadding = display.BarPadding || 15;
 
     const isComparison = data?.length == 2;
     const color = colors[0];
@@ -72,14 +74,30 @@ export function drawHorizontalBarChart(chart: any, data: DataResults[], size: IS
 
     const barCount = vals.length;
 
-    const height = size?.height || xAxisWidth + (verticalPadding * 2) + (barCount * barThickness) + ((barCount + 1) * barPadding);
+    if(vert){
 
+      //barThickness = ((width - yAxisWidth - (horizontalPadding * 2)) / barCount) * ((barThickness * barCount) / ((barThickness * barCount ) + ((barCount + 1 )*barPadding)));
+      //barPadding = ((width - yAxisWidth - (horizontalPadding * 2)) / barCount) * ((barThickness * (barCount + 1 )) / ((barThickness * barCount ) + ((barCount + 1 )*barPadding)));
+    }
 
-    const x = d3.scaleLinear()
+    let height = vert ? 
+    size?.height || 450 :
+     size?.height || xAxisWidth + (verticalPadding * 2) + (barCount * barThickness) + ((barCount + 1) * barPadding);
+    
+
+    let x = vert ? 
+    d3.scaleLinear()
+      .domain([0, barCount - 1])
+      .range([horizontalPadding + yAxisWidth + barPadding, width - horizontalPadding - barPadding - barThickness]):
+    d3.scaleLinear()
       .domain([0, maxVal])
       .range([0, width - (horizontalPadding * 2) - yAxisWidth]);
 
-    const y = d3.scaleLinear()
+    let y = vert ? 
+    d3.scaleLinear()
+    .domain([minVal, maxVal])
+    .range([0, height - (verticalPadding * 2) - xAxisWidth]) :
+    d3.scaleLinear()
       .domain([0, barCount - 1])
       .range([verticalPadding + barPadding, (height - verticalPadding - barPadding - barThickness - xAxisWidth)]);
 
@@ -95,39 +113,50 @@ export function drawHorizontalBarChart(chart: any, data: DataResults[], size: IS
     }
 
     //middle bar
-    const mid = horizontalPadding + yAxisWidth + x(0) + ((width - (horizontalPadding * 2) - yAxisWidth) / 2);
+    const mid = vert ? height - (verticalPadding * 2) - xAxisWidth :
+    horizontalPadding + yAxisWidth + x(0) + ((width - (horizontalPadding * 2) - yAxisWidth) / 2);
     if (isComparison) {
-      chart.append("line")
+      if(vert){
+        chart.append("line")
+        .style("stroke", "black")
+        .style("stroke-width", "1")
+        .attr("x1", yAxisWidth + horizontalPadding)
+        .attr("y1", mid)
+        .attr("x2", width - horizontalPadding)
+        .attr("y2", mid)
+      } else {
+        chart.append("line")
         .style("stroke", "black")
         .style("stroke-width", "1")
         .attr("x1", mid)
         .attr("y1", 0)
         .attr("x2", mid)
         .attr("y2", height - verticalPadding - xAxisWidth)
+      }
     }
 
     for (let i = 0; i < barCount; i++) {
       let val = vals[i];
-      let startx = horizontalPadding + yAxisWidth;
-      let xwid = x(Math.abs(val));
+      let start = vert ? height - verticalPadding - xAxisWidth : horizontalPadding + yAxisWidth;
+      let barlen = vert ? y(Math.abs(val)) : x(Math.abs(val));
       let barcolor = val >= 0 ? color : negColor;
       if (isComparison) {
-        startx += ((width - (horizontalPadding * 2) - yAxisWidth) / 2);
-        xwid /= 2;
+        start += -(vert ? (height - (verticalPadding * 2) - xAxisWidth) / 2 : ((width - (horizontalPadding * 2) - yAxisWidth) / 2));
+        barlen /= 2;
         if (val >= 0) {
 
         }
         else {
-          startx = startx - xwid;
+          start = start - barlen;
         }
       }
       body.append("rect")
         .attr("class", "bar " + barcolor)
         .attr("fill", barcolor)
-        .attr("x", startx)
-        .attr("width", xwid)
-        .attr("y", y(i))
-        .attr("height", barThickness)
+        .attr("x", vert ? x(i) : start)
+        .attr("width", vert ? barThickness : barlen)
+        .attr("y", vert ? start - barlen : y(i))
+        .attr("height", vert ? barlen : barThickness)
         .on('mouseover', function (event, d) {
           if (div) {
             d3.select(this).transition()
@@ -175,14 +204,18 @@ export function drawHorizontalBarChart(chart: any, data: DataResults[], size: IS
     }
     
 
-    const yAxis = d3.scalePoint()
+    const yAxis = vert ? 
+      d3.scalePoint()
+      .domain(yLabels)
+      .range([yAxisWidth + horizontalPadding + barPadding + (barThickness / 2), width - horizontalPadding - barPadding - (barThickness / 2)]) :
+     d3.scalePoint()
       .domain(yLabels)
       .range([verticalPadding + barPadding + (barThickness / 2), height - verticalPadding - barPadding - (barThickness / 2) - xAxisWidth]);
 
     chart.append("g")
-      .attr("transform", "translate(" + (yAxisWidth + horizontalPadding) + ",0)")
+      .attr("transform", vert ? "translate(0, " + (height - xAxisWidth - verticalPadding) + ")" : "translate(" + (yAxisWidth + horizontalPadding) + ",0)")
       //.data(this.model.values["Points"])
-      .call(d3.axisLeft(yAxis)).selectAll("text")
+      .call(vert ? d3.axisBottom(yAxis) : d3.axisLeft(yAxis)).selectAll("text")
       .style("text-transform", "capitalize")
       .style("text-anchor", "end");
 
@@ -190,8 +223,8 @@ export function drawHorizontalBarChart(chart: any, data: DataResults[], size: IS
       .style("stroke", "black")
       .style("stroke-width", "1")
       .attr("x1", yAxisWidth + horizontalPadding)
-      .attr("y1", verticalPadding)
-      .attr("x2", yAxisWidth + horizontalPadding)
+      .attr("y1", vert ? height - xAxisWidth - verticalPadding : verticalPadding)
+      .attr("x2", vert ? width - horizontalPadding : yAxisWidth + horizontalPadding)
       .attr("y2", height - xAxisWidth - verticalPadding);
 
 
@@ -208,13 +241,18 @@ export function drawHorizontalBarChart(chart: any, data: DataResults[], size: IS
     ////x axis
 
 
-    const xAxisScale = d3.scaleLinear()
+    const xAxisScale = vert ? 
+    d3.scaleLinear()
+    .domain([minVal, maxVal])
+    .range([height - xAxisWidth - verticalPadding, verticalPadding]) :
+     d3.scaleLinear()
       .domain([minVal, maxVal])
       .range([0, width - (horizontalPadding * 2) - yAxisWidth]);
 
     chart.append("g")
-      .attr("transform", "translate(" + (horizontalPadding + yAxisWidth) + ", " + (height - verticalPadding - xAxisWidth) + ")")
-      .call(d3.axisBottom(xAxisScale).tickFormat(function (d) { return formatCorrectly(d); }))
+      .attr("transform", vert ? "translate(" + (yAxisWidth + horizontalPadding) + ",0)" : "translate(" + (horizontalPadding + yAxisWidth) + ", " + (height - verticalPadding - xAxisWidth) + ")")
+      .call(vert ? d3.axisLeft(xAxisScale).tickFormat(function (d) { return formatCorrectly(d); })
+       : d3.axisBottom(xAxisScale).tickFormat(function (d) { return formatCorrectly(d); }))
 
       .selectAll("text")
       .attr("y", 0)

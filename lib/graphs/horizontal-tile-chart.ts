@@ -155,6 +155,7 @@ export function drawHorizontalTileChart(chart: any, data: DataResults[], size: I
       .call(g => g.select(".domain").remove())
       .selectAll("text")
       .style("text-anchor", "end")
+      .style("text-transform", "capitalize")
       .attr("transform", "rotate(-90)");
 
     //chart.append("line")
@@ -199,7 +200,9 @@ export function drawHorizontalTileChart(chart: any, data: DataResults[], size: I
     chart.append("g")
       .attr("transform", "translate(" + (yAxisWidth + padding) + ", 0)")
       .call(d3.axisLeft(yAxis).tickSize(0))
-      .call(g => g.select(".domain").remove());
+      .call(g => g.select(".domain").remove())
+      .selectAll("text")
+      .style("text-transform", "capitalize");
 
 
   }

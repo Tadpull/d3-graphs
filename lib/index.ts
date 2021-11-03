@@ -43,7 +43,7 @@ weekdayNames
 
 import { drawPieChart } from './graphs/pie-chart';
 import { drawStackedBarChart } from './graphs/stacked-bar-chart';
-import { drawHorizontalBarChart } from './graphs/horizontal-bar-chart';
+import { drawBarChart } from './graphs/bar-chart';
 import { drawLineChart } from './graphs/line-graph';
 import { drawHorizontalTileChart } from './graphs/horizontal-tile-chart';
 import { drawUsaGeoChart } from './graphs/usa-geo-chart';
@@ -56,7 +56,7 @@ NumberSettings,
 ISizeSettings,
 LineGraphSettings,
 PieGraphSettings,
-HorizontalBarGraphSettings,
+BarGraphSettings,
 GeoGraphSettings,
 TileGraphSettings,
 StackedBarGraphSettings,
@@ -83,13 +83,13 @@ export {
     LineGraphSettings,
     PieGraphSettings,
     GeoGraphSettings,
-    HorizontalBarGraphSettings,
+    BarGraphSettings,
     TileGraphSettings,
     StackedBarGraphSettings,
     TableSettings,
     drawPieChart,
     drawStackedBarChart,
-    drawHorizontalBarChart,
+    drawBarChart,
     drawLineChart,
     drawHorizontalTileChart,
     drawUsaGeoChart,
