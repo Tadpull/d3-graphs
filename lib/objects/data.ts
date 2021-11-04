@@ -61,6 +61,14 @@ export class DataResults {
     BarPadding:number = 15;
     Vertical: boolean = false
   }
+
+  export class GroupedBarGraphSettings {
+    LabelFormat?:string = ",";
+    Colors: string[] = [tpColors.blue, tpColors.yellow]
+    BarThicknessPercent:number = 0.5;
+    BlockWidth: number = 100;
+    Vertical: boolean = false;
+  }
   
   export class TileGraphSettings {
     HeightRatio: number;

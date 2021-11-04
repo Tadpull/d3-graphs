@@ -47,6 +47,7 @@ import { drawBarChart } from './graphs/bar-chart';
 import { drawLineChart } from './graphs/line-graph';
 import { drawHorizontalTileChart } from './graphs/horizontal-tile-chart';
 import { drawUsaGeoChart } from './graphs/usa-geo-chart';
+import { drawGroupedBarChart } from "./graphs/grouped-bar-chart";
 
 import { DataResultRow,
     DataResults,
@@ -60,6 +61,7 @@ BarGraphSettings,
 GeoGraphSettings,
 TileGraphSettings,
 StackedBarGraphSettings,
+GroupedBarGraphSettings,
 TableSettings,
 IDataGroup,
 IDataPoint,
@@ -86,6 +88,7 @@ export {
     BarGraphSettings,
     TileGraphSettings,
     StackedBarGraphSettings,
+    GroupedBarGraphSettings,
     TableSettings,
     drawPieChart,
     drawStackedBarChart,
@@ -93,6 +96,7 @@ export {
     drawLineChart,
     drawHorizontalTileChart,
     drawUsaGeoChart,
+    drawGroupedBarChart,
     parseDate,
     parseDates,
     dateMerge,

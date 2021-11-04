@@ -191,6 +191,7 @@ console.log(data);
       if(hor) {
         g = topBarLabels.append("g")
         .attr("transform", `translate(${barStartingPoint + 15}, ${x0(i) + (barWidth / 2)})` )
+        .style("opacity", 0);
         g.append("text")
         .text(d3.format(d3valueformat)(totalBar[i]))
         .style("text-anchor", "middle")
