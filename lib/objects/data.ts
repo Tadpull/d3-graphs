@@ -59,7 +59,7 @@ export class DataResults {
     Colors: string[] = [tpColors.greenDark, tpColors.pink];
     BarThickness: number = 30;
     BarPadding:number = 15;
-    Vertical: boolean = false;
+    Vertical: boolean = false
   }
   
   export class TileGraphSettings {
@@ -79,6 +79,7 @@ export class DataResults {
     Colors: string[] = tpSchemeB;
     LabelFormat: string = ","
     Horizontal: boolean = false;
+    SortByLargest: boolean = false;
   }
   
   export class TableSettings {
